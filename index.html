@@ -10,6 +10,26 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>vite-react-ts</title>
+
+    <!--
+      Set the theme before first paint to avoid a flash of the wrong theme.
+      Reads the saved preference. Writes the *resolved* theme so CSS [data-theme="dark"]
+      matches what React will apply on mount.
+    -->
+    <script>
+        (function () {
+            try {
+                var pref = localStorage.getItem("theme");
+                var dark = pref === "dark" || ((pref === "auto" || !pref) && window.matchMedia("(prefers-color-scheme: dark)").matches);
+                document.documentElement.setAttribute(
+                    "data-theme",
+                    dark ? "dark" : "light"
+                );
+            } catch (e) {
+                /* no-op: fall back to CSS media-query defaults */
+            }
+        })();
+    </script>
 </head>
 <body>
 <div id="root"></div>

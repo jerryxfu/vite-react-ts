@@ -1,0 +1,19 @@
+// Mirrors .navbar_toggle so the toggle sits naturally in the bar's right
+// cluster and inherits the same at-rest / scrolled color transitions.
+.theme-toggle {
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    padding: 0.35rem 0.4rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: inherit; // follows the surrounding bar text color
+    opacity: 0.85;
+    transition: background-color 0.2s, opacity 0.2s, color 0.4s ease;
+
+    &:hover {
+        opacity: 1;
+        background: color-mix(in srgb, currentColor 12%, transparent);
+    }
+}

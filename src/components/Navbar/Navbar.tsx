@@ -7,6 +7,7 @@ import {NavLink} from "react-router-dom";
 import NavDrawer from "./NavDrawer.tsx";
 import {BRAND, inlineLinks} from "./nav.config.ts";
 import "./Navbar.scss";
+import ThemeToggle from "../../Context/ThemeToggle.tsx";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -85,6 +86,8 @@ export default function Navbar({isHero = false, actions}: Props) {
                         </ul>
 
                         {actions}
+
+                        <ThemeToggle />
 
                         <button
                             className="navbar_toggle"

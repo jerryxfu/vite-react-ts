@@ -1,3 +1,12 @@
+// Light theme = the default :root values.
+// Dark theme applies when either:
+//   1. [data-theme="dark"] is set explicitly (manual toggle), OR
+//   2. no data-theme is set AND the OS prefers dark (auto mode, pre-hydration).
+//
+// The inline boot script in index.html sets data-theme before first paint, so
+// in practice #2 mainly guards the brief window before React mounts. Keeping
+// both means the page is never wrong even with JS disabled.
+
 :root {
     --primary: #abcdef;
     --accent: #4d8aff;
@@ -16,18 +25,35 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+
+    // Smooth the switch between themes.
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+// Shared dark palette, defined once and applied by both selectors below.
+@mixin dark-theme {
+    --primary: #6a9fd8;
+    --accent: #6b9fff;
+    --text: #e5e5e5;
+    --text-secondary: #9a9a9a;
+    --bg: #161616;
+    --border: #2e2e2e;
+    --surface: #1e1e1e;
+    --shadow-c: #0000004d;
+}
+
+// 1. Explicit choice via the toggle.
+:root[data-theme="dark"] {
+    @include dark-theme;
+}
+
+// 2. Auto mode: OS prefers dark and the user hasn't forced light.
+//    :not([data-theme]) covers pre-hydration; [data-theme="auto"] would only
+//    appear if you chose to write "auto" to the attribute (this template writes
+//    the *resolved* theme instead, so the :not() guard is the effective one).
 @media (prefers-color-scheme: dark) {
-    :root {
-        --primary: #6a9fd8;
-        --accent: #6b9fff;
-        --text: #e5e5e5;
-        --text-secondary: #9a9a9a;
-        --bg: #161616;
-        --border: #2e2e2e;
-        --surface: #1e1e1e;
-        --shadow-c: #0000004d;
+    :root:not([data-theme]) {
+        @include dark-theme;
     }
 }
 

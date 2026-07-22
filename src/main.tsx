@@ -6,6 +6,7 @@ import "./index.scss";
 import HomePage from "./pages/Home/Home.tsx";
 import NotFoundPage from "./pages/NotFound/NotFound.tsx";
 import ErrorBoundary from "./components/ErrorBoundary.tsx";
+import {ThemeProvider} from "./Context/ThemeContext.tsx";
 
 const LazyAboutPage = lazy(() => import("./pages/About/About.tsx"));
 
@@ -34,7 +35,9 @@ if (!rootElement) throw new Error("Root element not found");
 createRoot(rootElement).render(
     <StrictMode>
         <ErrorBoundary>
-            <RouterProvider router={router} />
+            <ThemeProvider>
+                <RouterProvider router={router} />
+            </ThemeProvider>
         </ErrorBoundary>
     </StrictMode>
 );
