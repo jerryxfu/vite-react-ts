@@ -42,3 +42,7 @@
 body {
     min-height: 100dvh;
 }
+
+.nav-spacer {
+    height: calc(56px + 2rem + env(safe-area-inset-top));
+}

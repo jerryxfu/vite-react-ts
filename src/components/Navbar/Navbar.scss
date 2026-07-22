@@ -1,0 +1,325 @@
+// Navbar + NavDrawer styles.
+//
+// Uses the template's CSS custom properties (--text, --bg, --surface, --border,
+// --accent) with hardcoded fallbacks so it degrades gracefully. Two bar modes:
+//   .navbar           transparent over a hero, light text
+//   .navbar--solid    opaque surface from the start, themed text
+// Both share the scrolled state (.is-scrolled): frosted + shrunk.
+
+// ============================================================
+//  Navbar
+// ============================================================
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 500;
+    display: flex;
+    flex-direction: column;
+
+    // Hero at-rest: transparent.
+    background: transparent;
+    backdrop-filter: blur(0px);
+    box-shadow: 0 0 0 0 transparent;
+    transition: background-color 0.4s ease, backdrop-filter 0.4s ease,
+    box-shadow 0.4s ease, padding 0.4s ease, color 0.4s ease;
+    padding: calc(1rem + env(safe-area-inset-top)) 0.25rem 1rem;
+}
+
+// Non-hero at-rest: solid surface.
+.navbar--solid {
+    background: var(--surface, #fff);
+    box-shadow: 0 1px 20px 0 var(--shadow-c, rgba(0, 0, 0, 0.12));
+}
+
+// Scrolled state, shared by both modes: frosted + shrink.
+.navbar.is-scrolled {
+    background: color-mix(in srgb, var(--bg, #fbfaf9) 70%, transparent);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 1px 20px 0 var(--shadow-c, rgba(0, 0, 0, 0.08));
+    padding: calc(0.45rem + env(safe-area-inset-top)) 0.25rem 0.45rem;
+}
+
+.navbar_bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 56px;
+    transition: height 0.4s ease;
+}
+
+.navbar.is-scrolled .navbar_bar {
+    height: 44px;
+}
+
+// ---- Logo ----
+.navbar_logo {
+    margin-left: 4%;
+    font-size: clamp(1.3rem, 3.5vw, 1.75rem);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: #fff; // light text at rest (over hero image)
+    text-decoration: none;
+    transition: color 0.4s ease;
+}
+
+// The solid bar isn't over an image, so its text follows the theme.
+.navbar--solid .navbar_logo {
+    color: var(--text, #1c1c1c);
+}
+
+// ---- Right cluster ----
+.navbar_right {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin-right: 4%;
+}
+
+.navbar_inline {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    gap: 1.5rem;
+
+    li a {
+        text-decoration: none;
+        font-size: 0.95rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: #fff;
+        opacity: 0.9;
+        transition: color 0.4s ease, opacity 0.2s ease;
+
+        &:hover,
+        &.is-active {
+            opacity: 1;
+        }
+
+        &.is-active {
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+    }
+
+    // Hide inline links on narrow screens; the drawer covers them.
+    @media (max-width: 640px) {
+        display: none;
+    }
+}
+
+.navbar--solid .navbar_inline li a {
+    color: var(--text, #1c1c1c);
+}
+
+// ---- Toggle (hamburger) ----
+.navbar_toggle {
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    padding: 0.35rem 0.4rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: #fff;
+    opacity: 0.85;
+    transition: background-color 0.2s, opacity 0.2s, color 0.4s ease;
+
+    &:hover {
+        opacity: 1;
+        background: rgba(255, 255, 255, 0.12);
+    }
+}
+
+.navbar--solid .navbar_toggle {
+    color: var(--text, #1c1c1c);
+}
+
+// Scrolled -> themed text on the frosted bar, for both modes.
+.navbar.is-scrolled .navbar_logo,
+.navbar.is-scrolled .navbar_inline li a,
+.navbar.is-scrolled .navbar_toggle {
+    color: var(--text, #1c1c1c);
+}
+
+.navbar.is-scrolled .navbar_toggle:hover {
+    background: color-mix(in srgb, var(--text, #000) 8%, transparent);
+}
+
+// ============================================================
+//  NavDrawer
+// ============================================================
+
+// ---- Backdrop ----
+.navdrawer_backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 600;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(2px);
+    cursor: pointer;
+
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.35s ease, visibility 0.35s ease;
+
+    &.is-open {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+    }
+}
+
+// ---- Drawer shell ----
+.navdrawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 700;
+    height: 100dvh;
+    width: min(380px, 85vw);
+    overflow: hidden; // clip sliding panels
+
+    background: var(--surface, #fff);
+    box-shadow: -8px 0 40px rgba(0, 0, 0, 0.25);
+
+    display: flex;
+    flex-direction: column;
+
+    transform: translateX(100%);
+    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+
+    &.is-open {
+        transform: translateX(0);
+    }
+}
+
+.navdrawer_head {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: flex-end;
+    padding: calc(1rem + env(safe-area-inset-top)) 1.5rem 0.5rem;
+}
+
+.navdrawer_close {
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    padding: 0.35rem;
+    cursor: pointer;
+    color: var(--text, #1c1c1c);
+    opacity: 0.7;
+    transition: opacity 0.2s, background-color 0.2s;
+
+    &:hover {
+        opacity: 1;
+        background: color-mix(in srgb, var(--text, #000) 6%, transparent);
+    }
+}
+
+// ---- Sliding stack ----
+// The track is a positioning context; each level's panel is absolutely
+// positioned to fill it, and GSAP slides panels via xPercent. Panels carry NO
+// base CSS transform, so GSAP's xPercent isn't misread as pixels.
+.navdrawer_track {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+}
+
+.navdrawer_panel {
+    position: absolute;
+    inset: 0;
+    overflow-y: auto;
+    padding: 0.5rem 2rem 2rem;
+    background: var(--surface, #fff); // opaque so overlapping panels don't bleed
+}
+
+// ---- Nav groups ----
+.navdrawer_nav {
+    display: flex;
+    flex-direction: column;
+}
+
+.navdrawer_group {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+
+    & + & {
+        margin-top: 1.25rem;
+        padding-top: 1.25rem;
+        border-top: 1px solid var(--border, #e0e0e0);
+    }
+}
+
+// ---- Links & branch buttons ----
+.navdrawer_link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 0.5rem;
+
+    background: transparent;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+
+    text-decoration: none;
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--text, #1c1c1c);
+    padding: 0.45rem 0;
+    transition: color 0.2s;
+
+    &:hover {
+        color: var(--accent, #4d8aff);
+    }
+
+    svg {
+        opacity: 0.5;
+        flex-shrink: 0;
+    }
+}
+
+// ---- Level header (Back + subtitle), shown on every non-root level ----
+.navdrawer_back {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--text-secondary, #555);
+    font-size: 0.95rem;
+    padding: 0.45rem 0;
+    margin-bottom: 0.5rem;
+    transition: color 0.2s;
+
+    &:hover {
+        color: var(--text, #1c1c1c);
+    }
+}
+
+.navdrawer_subtitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--accent, #4d8aff);
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border, #e0e0e0);
+}
+
+// ---- Reduced motion ----
+@media (prefers-reduced-motion: reduce) {
+    .navbar,
+    .navbar_bar,
+    .navdrawer,
+    .navdrawer_backdrop {
+        transition-duration: 0.01ms;
+    }
+}
