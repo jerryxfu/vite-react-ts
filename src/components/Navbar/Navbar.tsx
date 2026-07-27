@@ -11,6 +11,9 @@ import ThemeToggle from "../../Context/ThemeToggle.tsx";
 
 gsap.registerPlugin(ScrollTrigger);
 
+// Scroll distance before the bar frosts and shrinks.
+const SHRINK_AT = 40;
+
 type Props = {
     // When true the bar sits transparent over a hero at the top of the page and
     // turns frosted once scrolled. When false it's solid from the start.
@@ -27,20 +30,29 @@ export default function Navbar({isHero = false, actions}: Props) {
     useGSAP(() => {
         const nav = navRef.current;
         if (!nav) return;
+
+        const setScrolled = (on: boolean) => nav.classList.toggle("is-scrolled", on);
+
+        // onToggle fires only when the active state flips, where onUpdate would
+        // run on every scroll frame to usually change nothing. The explicit end
+        // keeps the active window well-defined rather than inferred.
         ScrollTrigger.create({
-            start: 40,
-            onUpdate: (self) => {
-                nav.classList.toggle("is-scrolled", self.scroll() > 40);
-            },
+            start: SHRINK_AT,
+            end: () => Math.max(ScrollTrigger.maxScroll(window), SHRINK_AT + 1),
+            onToggle: (self) => setScrolled(self.isActive),
         });
-        nav.classList.toggle("is-scrolled", window.scrollY > 40);
+
+        setScrolled(window.scrollY > SHRINK_AT);
     });
 
-    // Lock body scroll while the drawer is open.
+    // Lock body scroll while the drawer is open, restoring whatever was there
+    // before rather than blanking it — something else may own body.overflow.
     useEffect(() => {
-        document.body.style.overflow = isOpen ? "hidden" : "";
+        if (!isOpen) return;
+        const previous = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
         return () => {
-            document.body.style.overflow = "";
+            document.body.style.overflow = previous;
         };
     }, [isOpen]);
 

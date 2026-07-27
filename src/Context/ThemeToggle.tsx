@@ -1,30 +1,30 @@
-import {Moon, Sun, SunMoon} from "lucide-react";
-import {useTheme} from "./ThemeContext.tsx";
+import {type LucideIcon, Moon, Sun, SunMoon} from "lucide-react";
+import {type ThemePreference, useTheme} from "./ThemeContext.tsx";
 import "./ThemeToggle.scss";
 
-// Cycles light -> dark -> auto on click.
-// The icon reflects the user's *preference* (so "auto" is visible as its own state),
-// while the actual colors follow the resolved theme.
+// Cycles through every theme in THEMES + "auto".
+// The icon reflects the user's preference (includes "auto"), while the actual colors follow the resolved theme.
 
-const LABELS = {
-    light: "Theme: light",
-    dark: "Theme: dark",
-    auto: "Theme: auto",
-} as const;
+// Typed as a full Record, so adding a theme to THEMES without adding an icon here is an error.
+const ICONS: Record<ThemePreference, LucideIcon> = {
+    light: Sun,
+    dark: Moon,
+    auto: SunMoon,
+};
 
 export default function ThemeToggle() {
     const {preference, cycleTheme} = useTheme();
+    const Icon = ICONS[preference];
+    const label = `Theme: ${preference}`;
 
     return (
         <button
             className="theme-toggle"
             onClick={cycleTheme}
-            aria-label={LABELS[preference]}
-            title={LABELS[preference]}
+            aria-label={label}
+            title={label}
         >
-            {preference === "light" && <Sun size={20} />}
-            {preference === "dark" && <Moon size={20} />}
-            {preference === "auto" && <SunMoon size={20} />}
+            <Icon size={20} />
         </button>
     );
 }

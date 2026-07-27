@@ -19,12 +19,14 @@
     <script>
         (function () {
             try {
-                var pref = localStorage.getItem("theme");
-                var dark = pref === "dark" || ((pref === "auto" || !pref) && window.matchMedia("(prefers-color-scheme: dark)").matches);
-                document.documentElement.setAttribute(
-                    "data-theme",
-                    dark ? "dark" : "light"
-                );
+                // Keep in sync with THEMES in src/Context/ThemeContext.tsx
+                var themes = ["light", "dark"];
+                var pref = localStorage.getItem("theme") || "auto";
+                // A known theme name is used as-is; "auto" and anything unrecognised falls back to the OS preference.
+                var theme = themes.indexOf(pref) !== -1
+                    ? pref
+                    : (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+                document.documentElement.setAttribute("data-theme", theme);
             } catch (e) {
                 /* no-op: fall back to CSS media-query defaults */
             }
