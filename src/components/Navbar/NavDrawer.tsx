@@ -2,6 +2,7 @@ import {useRef, useState} from "react";
 import {gsap} from "gsap";
 import {useGSAP} from "@gsap/react";
 import {ChevronLeft, ChevronRight, X} from "lucide-react";
+import {Link} from "wouter";
 import {type DrawerItem, menuGroups} from "./nav.config.ts";
 import "./Navbar.scss";
 
@@ -31,7 +32,9 @@ export default function NavDrawer({isOpen, onClose}: Props) {
 
     const trackRef = useRef<HTMLDivElement>(null);
 
-    const current = stack[stack.length - 1];
+    // The stack is seeded with ROOT and back() refuses to pop below one entry,
+    // so this is never undefined, but noUncheckedIndexedAccess can't know that.
+    const current = stack[stack.length - 1]!; // keep the non-null assertion
 
     const drill = (branch: Extract<DrawerItem, { type: "branch" }>) => {
         const level: Level = {
@@ -91,13 +94,13 @@ export default function NavDrawer({isOpen, onClose}: Props) {
     // When the drawer closes, reset to root after the close transition so it reopens at the top level.
     useGSAP(
         () => {
-            if (!isOpen && stack.length > 1) {
-                const id = window.setTimeout(() => {
-                    setStack([ROOT]);
-                    setOutgoing(null);
-                }, 450);
-                return () => window.clearTimeout(id);
-            }
+            if (isOpen || stack.length <= 1) return;
+
+            const id = window.setTimeout(() => {
+                setStack([ROOT]);
+                setOutgoing(null);
+            }, 450);
+            return () => window.clearTimeout(id);
         },
         {dependencies: [isOpen]}
     );
@@ -110,13 +113,13 @@ export default function NavDrawer({isOpen, onClose}: Props) {
                 {group.map((item) =>
                     item.type === "link" ? (
                         <li key={item.href}>
-                            <a
+                            <Link
                                 href={item.href}
                                 className="navdrawer_link"
                                 onClick={closeSoon}
                             >
                                 {item.label}
-                            </a>
+                            </Link>
                         </li>
                     ) : (
                         <li key={item.key}>

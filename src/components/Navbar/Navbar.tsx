@@ -4,6 +4,7 @@ import {ScrollTrigger} from "gsap/ScrollTrigger";
 import {useGSAP} from "@gsap/react";
 import {Menu} from "lucide-react";
 import NavDrawer from "./NavDrawer.tsx";
+import {Link} from "wouter";
 import {BRAND, inlineLinks} from "./nav.config.ts";
 import "./Navbar.scss";
 
@@ -65,19 +66,26 @@ export default function Navbar({isHero = false, isShrunk = false, actions}: Prop
                 ref={navRef}
             >
                 <div className="navbar_bar">
-                    <a
+                    <Link
                         className="navbar_logo"
                         href="/"
                         aria-label={`${BRAND} — home`}
                     >
                         {BRAND}
-                    </a>
+                    </Link>
 
                     <div className="navbar_right">
                         <ul className="navbar_inline">
                             {inlineLinks.map((link) => (
                                 <li key={link.href}>
-                                    <a href={link.href}>{link.label}</a>
+                                    {/* wouter passes the match result to a className function,
+                                        so the active rule needs no extra hook. */}
+                                    <Link
+                                        href={link.href}
+                                        className={(isActive) => (isActive ? "is-active" : undefined)}
+                                    >
+                                        {link.label}
+                                    </Link>
                                 </li>
                             ))}
                         </ul>

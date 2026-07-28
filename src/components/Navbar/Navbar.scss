@@ -25,14 +25,14 @@
 // Non-hero at-rest: solid surface.
 .navbar--solid {
     background: var(--surface);
-    box-shadow: 0 1px 20px 0 var(--shadow-c);
+    box-shadow: 0 1px 20px 0 var(--shadow);
 }
 
 // Scrolled state, shared by both modes: frosted + shrink.
 .navbar.is-scrolled {
     background: color-mix(in srgb, var(--bg) 70%, transparent);
     backdrop-filter: blur(12px);
-    box-shadow: 0 1px 20px 0 var(--shadow-c);
+    box-shadow: 0 1px 20px 0 var(--shadow);
     padding: calc(0.45rem + env(safe-area-inset-top)) 0.25rem 0.45rem;
 }
 
@@ -90,6 +90,16 @@
 
         &:hover {
             opacity: 1;
+        }
+
+        // wouter's <Link> sets this when its href matches the current route.
+        // Expressed as opacity + underline rather than a color so it reads the
+        // same over a hero, on the solid bar, and in either theme.
+        &.is-active {
+            opacity: 1;
+            text-decoration: underline;
+            text-underline-offset: 0.35em;
+            text-decoration-thickness: 1px;
         }
     }
 
@@ -172,7 +182,7 @@
     overflow: hidden; // clip sliding panels
 
     background: var(--surface);
-    box-shadow: -8px 0 40px var(--shadow-c);
+    box-shadow: -8px 0 40px var(--shadow);
 
     display: flex;
     flex-direction: column;

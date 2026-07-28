@@ -4,7 +4,7 @@ An opinionated starter template for React projects with TypeScript, Vite, and Sa
 
 ## What's Included
 
-- **React** with `react-router-dom` (lazy loading, error boundary)
+- **React** with `wouter` (lazy loading, error boundary)
 - **TypeScript** with strict mode
 - **Sass** (SCSS) with a minimal reset and CSS custom properties (light/dark via `prefers-color-scheme`)
 - **ESLint** flat config with `typescript-eslint`, `react-hooks`, and `react-refresh` plugins

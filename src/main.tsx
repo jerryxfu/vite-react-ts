@@ -1,6 +1,6 @@
-import {lazy, StrictMode, Suspense} from "react";
+import {lazy, StrictMode, Suspense, useEffect} from "react";
 import {createRoot} from "react-dom/client";
-import {createBrowserRouter, RouterProvider} from "react-router-dom";
+import {Route, Switch, useLocation} from "wouter";
 
 import "./index.scss";
 import HomePage from "./pages/Home/Home.tsx";
@@ -12,22 +12,17 @@ const LazyAboutPage = lazy(() => import("./pages/About/About.tsx"));
 
 // export const isDev = import.meta.env.DEV || import.meta.env.MODE === "development";
 
-const router = createBrowserRouter([
-    {
-        path: "/", element: <HomePage />
-    },
-    {
-        path: "/about",
-        element: (
-            <Suspense fallback={null}>
-                <LazyAboutPage />
-            </Suspense>
-        )
-    },
-    {
-        path: "*", element: <NotFoundPage />
-    }
-]);
+// Client-side navigation preserves scroll position,
+// so a route change would otherwise land you partway down the new page
+function ScrollToTop() {
+    const [pathname] = useLocation();
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [pathname]);
+
+    return null;
+}
 
 const rootElement = document.getElementById("root");
 if (!rootElement) throw new Error("Root element not found");
@@ -36,7 +31,16 @@ createRoot(rootElement).render(
     <StrictMode>
         <ErrorBoundary>
             <ThemeProvider>
-                <RouterProvider router={router} />
+                <ScrollToTop />
+                <Switch>
+                    <Route path="/"><HomePage /></Route>
+                    <Route path="/about">
+                        <Suspense fallback={null}>
+                            <LazyAboutPage />
+                        </Suspense>
+                    </Route>
+                    <Route><NotFoundPage /></Route>
+                </Switch>
             </ThemeProvider>
         </ErrorBoundary>
     </StrictMode>
