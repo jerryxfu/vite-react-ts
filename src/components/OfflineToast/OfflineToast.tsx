@@ -2,10 +2,10 @@ import {useEffect, useState} from "react";
 import {WifiOff} from "lucide-react";
 import "./OfflineToast.scss";
 
-// navigator.onLine reports whether the device has a network interface, not
-// whether anything is actually reachable — so treat this as a hint. Pages still
-// load from the service worker cache; anything that calls an API will not.
+// Details in vite.config.ts
 export default function OfflineToast() {
+    // navigator.onLine reports whether the device has a network interface, not
+    // whether anything is actually reachable — so treat this as a hint.
     const [isOffline, setIsOffline] = useState(!navigator.onLine);
 
     useEffect(() => {
