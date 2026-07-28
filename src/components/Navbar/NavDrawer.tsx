@@ -49,9 +49,9 @@ export default function NavDrawer({isOpen, onClose}: Props) {
         setStack((s) => s.slice(0, -1));
     };
 
-    // Animate the slide whenever the current level changes. The incoming panel
-    // starts off-screen (right on forward, left on back) and settles to 0; the
-    // outgoing panel slides the opposite way, then unmounts.
+    // Animate the slide whenever the current level changes.
+    // The incoming panel starts off-screen (right on forward, left on back) and settles to 0.
+    // The outgoing panel slides the opposite way, then unmounts.
     useGSAP(
         () => {
             const track = trackRef.current;
@@ -88,8 +88,7 @@ export default function NavDrawer({isOpen, onClose}: Props) {
         {dependencies: [stack.length, current.key]}
     );
 
-    // When the drawer closes, reset to root after the close transition so it
-    // reopens at the top level.
+    // When the drawer closes, reset to root after the close transition so it reopens at the top level.
     useGSAP(
         () => {
             if (!isOpen && stack.length > 1) {

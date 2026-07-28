@@ -7,7 +7,7 @@ import {createContext, type ReactNode, useContext, useEffect, useState} from "re
 export const THEMES = ["light", "dark"] as const;
 export type Theme = typeof THEMES[number];
 
-// The order the toggle cycles through. "auto" always sits last.
+// The order the toggle cycles through + "auto".
 export const THEME_PREFERENCES = [...THEMES, "auto"] as const;
 export type ThemePreference = typeof THEME_PREFERENCES[number];
 
@@ -42,34 +42,34 @@ function getInitialPreference(): ThemePreference {
         const stored = localStorage.getItem(STORAGE_KEY);
         if (isPreference(stored)) return stored;
     } catch {
-        // localStorage unavailable (private mode, etc.) — fall through.
+        // localStorage unavailable (private mode, etc.) -> fall through
     }
     return "auto";
 }
 
 export function ThemeProvider({children}: { children: ReactNode }) {
     const [preference, setPreferenceState] = useState<ThemePreference>(getInitialPreference);
-    const [theme, setTheme] = useState<Theme>(() => resolve(getInitialPreference()));
+    // Only tracks what "auto" currently resolves to; unused when a theme is forced.
+    const [autoTheme, setAutoTheme] = useState<Theme>(() => resolve("auto"));
+
+    // Derived from preference to avoid using setState in uesEffect
+    const theme: Theme = preference === "auto" ? autoTheme : preference;
 
     // Apply the resolved theme to <html> and persist the preference.
     useEffect(() => {
-        setTheme(resolve(preference));
+        document.documentElement.setAttribute("data-theme", theme);
         try {
             localStorage.setItem(STORAGE_KEY, preference);
         } catch {
             // Ignore write failures.
         }
-    }, [preference]);
-
-    useEffect(() => {
-        document.documentElement.setAttribute("data-theme", theme);
-    }, [theme]);
+    }, [theme, preference]);
 
     // While on "auto", react to OS theme changes live.
     useEffect(() => {
         if (preference !== "auto") return;
         const mq = window.matchMedia("(prefers-color-scheme: dark)");
-        const onChange = () => setTheme(resolve("auto"));
+        const onChange = () => setAutoTheme(resolve("auto"));
         mq.addEventListener("change", onChange);
         return () => mq.removeEventListener("change", onChange);
     }, [preference]);
@@ -89,7 +89,6 @@ export function ThemeProvider({children}: { children: ReactNode }) {
     );
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
 export function useTheme(): ThemeContextValue {
     const ctx = useContext(ThemeContext);
     if (!ctx) throw new Error("useTheme must be used within a ThemeProvider");

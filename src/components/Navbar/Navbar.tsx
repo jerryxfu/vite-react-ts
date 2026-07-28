@@ -6,7 +6,6 @@ import {Menu} from "lucide-react";
 import NavDrawer from "./NavDrawer.tsx";
 import {BRAND, inlineLinks} from "./nav.config.ts";
 import "./Navbar.scss";
-import ThemeToggle from "../../Context/ThemeToggle.tsx";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -17,16 +16,23 @@ type Props = {
     // When true the bar sits transparent over a hero at the top of the page and
     // turns frosted once scrolled. When false it's solid from the start.
     isHero?: boolean;
-    // Optional extra controls rendered in the right cluster, left of the menu
-    // button (e.g. a theme toggle). Keeps commerce/i18n logic out of here.
+    // Locks the bar in its compact state. The scroll trigger is never created,
+    // so the bar never expands regardless of scroll position.
+    isShrunk?: boolean;
+    // Extra controls rendered in the right cluster, left of the menu button.
+    // Nothing is rendered here by default. e.g. pass <ThemeToggle /> for a theme switch.
     actions?: React.ReactNode;
 };
 
-export default function Navbar({isHero = false, actions}: Props) {
+export default function Navbar({isHero = false, isShrunk = false, actions}: Props) {
     const [isOpen, setIsOpen] = useState(false);
     const navRef = useRef<HTMLElement>(null);
 
     useGSAP(() => {
+        // Locked compact: the class is already on the element from render, so
+        // there's nothing to toggle and no trigger worth creating.
+        if (isShrunk) return;
+
         const nav = navRef.current;
         if (!nav) return;
 
@@ -42,17 +48,6 @@ export default function Navbar({isHero = false, actions}: Props) {
         setScrolled(window.scrollY > SHRINK_AT);
     });
 
-    // Lock body scroll while the drawer is open, restoring whatever was there
-    // before rather than blanking it — something else may own body.overflow.
-    useEffect(() => {
-        if (!isOpen) return;
-        const previous = document.body.style.overflow;
-        document.body.style.overflow = "hidden";
-        return () => {
-            document.body.style.overflow = previous;
-        };
-    }, [isOpen]);
-
     // Escape closes the drawer.
     useEffect(() => {
         if (!isOpen) return;
@@ -66,7 +61,7 @@ export default function Navbar({isHero = false, actions}: Props) {
     return (
         <>
             <nav
-                className={`navbar${isHero ? "" : " navbar--solid"}`}
+                className={`navbar${isHero ? "" : " navbar--solid"}${isShrunk ? " is-scrolled" : ""}`}
                 ref={navRef}
             >
                 <div className="navbar_bar">
@@ -88,8 +83,6 @@ export default function Navbar({isHero = false, actions}: Props) {
                         </ul>
 
                         {actions}
-
-                        <ThemeToggle />
 
                         <button
                             className="navbar_toggle"

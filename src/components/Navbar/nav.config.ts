@@ -1,10 +1,7 @@
 // Navigation data + types.
 //
-// A drawer item is either a leaf `link` (navigates, then closes the drawer) or a
-// `branch` (drills one level deeper). A branch's children are themselves
-// DrawerItems, so the tree nests to any depth.
-//
-// The inline links (shown in the top bar on wider screens) are a flat list.
+// A drawer item is either a `link` (navigates, then closes the drawer)
+// or a `branch` (drills one level deeper, i.e. creates a new level of navigation).
 
 export type DrawerLink = {
     type: "link";
@@ -12,6 +9,7 @@ export type DrawerLink = {
     href: string;
 };
 
+// Nestable to any depth
 export type DrawerBranch = {
     type: "branch";
     label: string;
@@ -24,7 +22,7 @@ export type DrawerItem = DrawerLink | DrawerBranch;
 // Text shown by the brand/logo in the top-left.
 export const BRAND = "Acme";
 
-// Links shown inline in the top bar. Keep this short (1–4 items).
+// Links shown inline in the top bar
 export const inlineLinks: { href: string; label: string }[] = [
     {href: "/", label: "Home"},
     {href: "/about", label: "About"},

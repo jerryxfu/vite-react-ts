@@ -4,16 +4,17 @@ import viteLogo from "../../assets/vite.svg";
 import heroImg from "../../assets/hero.png";
 import "./Home.scss";
 import Navbar from "../../components/Navbar/Navbar.tsx";
+import ThemeToggle from "../../Context/ThemeToggle.tsx";
 
 export default function Home() {
     const [count, setCount] = useState(0);
 
     return (
         <div>
-            <Navbar />
+            <Navbar actions={<ThemeToggle />} />
             <div className="nav-spacer" />
 
-            {/* region template (feel free to delete) */}
+            {/* region Vite template (feel free to delete) */}
             <section id="center">
                 <div className="hero">
                     <img src={heroImg} className="base" width="170" height="179" alt="" />

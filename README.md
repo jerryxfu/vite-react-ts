@@ -69,7 +69,7 @@ Add a spacer once, wherever you render `<Navbar />`:
 The height matches the navbar's at-rest size: the `56px` bar plus its `1rem` top/bottom padding plus the safe-area inset. The bar shrinks on scroll, but since
 it's fixed the spacer only needs to clear the initial height.
 
-For hero pages (`<Navbar isHero />`), skip the spacer — the transparent bar is meant to sit over the hero content.
+For hero pages (`<Navbar isHero={true} />`), you can skip the spacer so the transparent bar sits over the hero content.
 
 ---
 

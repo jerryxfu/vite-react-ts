@@ -1,12 +1,10 @@
 // Navbar + NavDrawer styles.
 // Two bar modes:
-// .navbar - transparent over a hero
-// .navbar--solid - opaque surface from the start
+// .navbar -> transparent over a hero
+// .navbar--solid -> opaque surface from the start
 // Both share the scrolled state (.is-scrolled): frosted + shrunk.
 
-// ---
-//  Navbar
-// ---
+// --- Navbar ---
 .navbar {
     position: fixed;
     top: 0;
@@ -139,9 +137,7 @@
     background: color-mix(in srgb, var(--text) 8%, transparent);
 }
 
-// ---
-//  NavDrawer
-// ---
+//  --- NavDrawer ---
 
 // ---- Backdrop ----
 .navdrawer_backdrop {
@@ -218,8 +214,7 @@
 
 // ---- Sliding stack ----
 // The track is a positioning context; each level's panel is absolutely
-// positioned to fill it, and GSAP slides panels via xPercent. Panels carry NO
-// base CSS transform, so GSAP's xPercent isn't misread as pixels.
+// positioned to fill it, and GSAP slides panels via xPercent.
 .navdrawer_track {
     position: relative;
     flex: 1;
