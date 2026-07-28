@@ -60,3 +60,14 @@ export const menuGroups: DrawerItem[][] = [
         {type: "link", label: "Contact", href: "/contact"},
     ],
 ];
+
+// Which hrefs wouter is allowed to handle client-side.
+// An absolute URL or a hash anchor must stay a plain <a>.
+// wouter's <Link> intercepts the click and calls history.pushState, which for a cross-origin URL silently does nothing.
+// For a hash, skip the browser's native scroll-to-id.
+export function isRouted(href: string): boolean {
+    if (href.startsWith("#")) return false;
+    // Match any scheme ("https:", "mailto:", "tel:") and protocol-relative "//host".
+    if (href.startsWith("//") || /^[a-z][a-z0-9+.-]*:/i.test(href)) return false;
+    return true;
+}

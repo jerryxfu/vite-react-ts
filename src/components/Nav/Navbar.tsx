@@ -5,7 +5,7 @@ import {useGSAP} from "@gsap/react";
 import {Menu} from "lucide-react";
 import NavDrawer from "./NavDrawer.tsx";
 import {Link} from "wouter";
-import {BRAND, inlineLinks} from "./nav.config.ts";
+import {BRAND, inlineLinks, isRouted} from "./nav.config.ts";
 import "./Navbar.scss";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -80,12 +80,16 @@ export default function Navbar({isHero = false, isShrunk = false, actions}: Prop
                                 <li key={link.href}>
                                     {/* wouter passes the match result to a className function,
                                         so the active rule needs no extra hook. */}
-                                    <Link
-                                        href={link.href}
-                                        className={(isActive) => (isActive ? "is-active" : undefined)}
-                                    >
-                                        {link.label}
-                                    </Link>
+                                    {isRouted(link.href) ? (
+                                        <Link
+                                            href={link.href}
+                                            className={(isActive) => (isActive ? "is-active" : undefined)}
+                                        >
+                                            {link.label}
+                                        </Link>
+                                    ) : (
+                                        <a href={link.href}>{link.label}</a>
+                                    )}
                                 </li>
                             ))}
                         </ul>

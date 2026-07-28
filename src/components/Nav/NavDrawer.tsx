@@ -3,7 +3,7 @@ import {gsap} from "gsap";
 import {useGSAP} from "@gsap/react";
 import {ChevronLeft, ChevronRight, X} from "lucide-react";
 import {Link} from "wouter";
-import {type DrawerItem, menuGroups} from "./nav.config.ts";
+import {type DrawerItem, isRouted, menuGroups} from "./nav.config.ts";
 import "./Navbar.scss";
 
 type Props = {
@@ -113,13 +113,15 @@ export default function NavDrawer({isOpen, onClose}: Props) {
                 {group.map((item) =>
                     item.type === "link" ? (
                         <li key={item.href}>
-                            <Link
-                                href={item.href}
-                                className="navdrawer_link"
-                                onClick={closeSoon}
-                            >
-                                {item.label}
-                            </Link>
+                            {isRouted(item.href) ? (
+                                <Link href={item.href} className="navdrawer_link" onClick={closeSoon}>
+                                    {item.label}
+                                </Link>
+                            ) : (
+                                <a href={item.href} className="navdrawer_link" onClick={closeSoon}>
+                                    {item.label}
+                                </a>
+                            )}
                         </li>
                     ) : (
                         <li key={item.key}>

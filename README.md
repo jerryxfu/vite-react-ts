@@ -14,16 +14,34 @@ An opinionated starter template for React projects with TypeScript, Vite, and Sa
 ## Project Structure
 
 ```
+public/                      icons; referenced by the manifest in vite.config.ts
 src/
+├── Context/
+│   ├── ThemeContext.tsx     THEMES is the source of truth for themes
+│   ├── ThemeToggle.tsx      passed to <Navbar actions={...} />, not imported by it
+│   └── ThemeToggle.scss
 ├── components/
+│   ├── Nav/
+│   │   ├── Navbar.tsx       hero/solid modes, isShrunk, actions slot
+│   │   ├── NavDrawer.tsx    slide-in drawer, supports nested panels
+│   │   ├── nav.config.ts    all nav data + isRouted (edit this)
+│   │   └── Navbar.scss      styles for both
+│   ├── OfflineToast/        shown when navigator.onLine goes false
 │   └── ErrorBoundary.tsx
 ├── pages/
-│   ├── Home
-│   ├── About
-│   └── NotFound
-├── index.scss
-└── main.tsx
+│   ├── Home/                renders <Navbar isHero />
+│   ├── About/               lazy-loaded, as an example of a code-split route
+│   └── NotFound/            the <Switch> fallback
+├── index.scss               reset, theme palettes, CSS custom properties
+└── main.tsx                 routes, providers, ScrollToTop, OfflineToast
 ```
+
+The two files you'll touch first are **`nav.config.ts`** (navigation is data) and **`index.scss`** (the palette). Routes are registered as `<Route>`
+children of the `<Switch>` in `main.tsx`.
+
+Four tsconfigs: `tsconfig.json` only holds `references`,
+`tsconfig.base.json` holds the option shared by the other two, and
+`tsconfig.app.json` / `tsconfig.node.json` keep only what's specific to each.
 
 ## Getting Started
 
@@ -44,10 +62,10 @@ pnpm dev
 
 ## Customization
 
-- **Styles**: Edit `src/index.scss` to change the color palette, fonts, or add variables. Add individual component-level `.scss` files as you expand the site.
+- **Styles**: Edit `src/index.scss` to change the colors, fonts, or add variables. You can add individual component-level `.scss` files as you expand the site.
 - **Routing**: Add new pages in `src/pages/` and register `<Route>`s inside the `<Switch>` in `main.tsx`. Use `lazy()` + `<Suspense>` for code-split routes.
 - **PWA**: Rename the app and repoint the icons under `manifest` in `vite.config.ts`, and replace the placeholder icons in `public/`. Images are cached on first
-  view rather than precached, so only code, styles and markup ship in the initial cache.
+  view rather than precached, so only code, styles and markup ship in the initial cache. Or remove the PWA entirely if you don't need offline support.
 - **Context providers**: Wrap `<Switch>` in `main.tsx` with any context providers you need (e.g. theme, auth).
 
 ## Spacing content below the navbar
@@ -163,8 +181,8 @@ and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/p
 
 ```js
 // eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+import reactX from 'eslint-plugin-react-x';
+import reactDom from 'eslint-plugin-react-dom';
 
 export default defineConfig([
     globalIgnores(['dist']),
@@ -185,5 +203,5 @@ export default defineConfig([
             // other options...
         },
     },
-])
+]);
 ```

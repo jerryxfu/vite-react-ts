@@ -4,16 +4,15 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon16.png" />
-    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>vite-react-ts</title>
 
     <!--
-      Set the theme before first paint to avoid a flash of the wrong theme.
-      Reads the saved preference. Writes the *resolved* theme so CSS [data-theme="dark"]
-      matches what React will apply on mount.
+      Set the theme before first paint to avoid FOUC. Reads the saved preference,
+      writes the resolved theme so CSS [data-theme="dark"] matches what React will apply on mount.
     -->
     <script>
         (function () {
@@ -21,7 +20,7 @@
                 // Keep in sync with THEMES in src/Context/ThemeContext.tsx
                 var themes = ["light", "dark"];
                 var pref = localStorage.getItem("theme") || "auto";
-                // A known theme name is used as-is; "auto" and anything unrecognised falls back to the OS preference.
+                // A known theme name is used as-is; "auto" and anything unrecognized falls back to the OS preference.
                 var theme = themes.indexOf(pref) !== -1
                     ? pref
                     : (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");

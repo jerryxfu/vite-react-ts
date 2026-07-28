@@ -3,7 +3,7 @@ import reactLogo from "../../assets/react.svg";
 import viteLogo from "../../assets/vite.svg";
 import heroImg from "../../assets/hero.png";
 import "./Home.scss";
-import Navbar from "../../components/Navbar/Navbar.tsx";
+import Navbar from "@/components/Nav/Navbar.tsx";
 import ThemeToggle from "../../Context/ThemeToggle.tsx";
 
 export default function Home() {
