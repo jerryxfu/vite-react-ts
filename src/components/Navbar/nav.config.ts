@@ -2,11 +2,9 @@
 //
 // A drawer item is either a leaf `link` (navigates, then closes the drawer) or a
 // `branch` (drills one level deeper). A branch's children are themselves
-// DrawerItems, so the tree nests to any depth with no component changes — add
-// data, get depth.
+// DrawerItems, so the tree nests to any depth.
 //
 // The inline links (shown in the top bar on wider screens) are a flat list.
-// Edit both to fit your site; everything else is generic.
 
 export type DrawerLink = {
     type: "link";

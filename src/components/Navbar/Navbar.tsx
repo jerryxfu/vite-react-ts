@@ -3,7 +3,6 @@ import {gsap} from "gsap";
 import {ScrollTrigger} from "gsap/ScrollTrigger";
 import {useGSAP} from "@gsap/react";
 import {Menu} from "lucide-react";
-import {NavLink} from "react-router-dom";
 import NavDrawer from "./NavDrawer.tsx";
 import {BRAND, inlineLinks} from "./nav.config.ts";
 import "./Navbar.scss";
@@ -19,7 +18,7 @@ type Props = {
     // turns frosted once scrolled. When false it's solid from the start.
     isHero?: boolean;
     // Optional extra controls rendered in the right cluster, left of the menu
-    // button (e.g. a theme toggle). Keeps commerce/i18n concerns out of here.
+    // button (e.g. a theme toggle). Keeps commerce/i18n logic out of here.
     actions?: React.ReactNode;
 };
 
@@ -33,9 +32,7 @@ export default function Navbar({isHero = false, actions}: Props) {
 
         const setScrolled = (on: boolean) => nav.classList.toggle("is-scrolled", on);
 
-        // onToggle fires only when the active state flips, where onUpdate would
-        // run on every scroll frame to usually change nothing. The explicit end
-        // keeps the active window well-defined rather than inferred.
+        // onToggle fires only when the active state flips, where onUpdate would run on every scroll frame to usually change nothing.
         ScrollTrigger.create({
             start: SHRINK_AT,
             end: () => Math.max(ScrollTrigger.maxScroll(window), SHRINK_AT + 1),
@@ -73,26 +70,19 @@ export default function Navbar({isHero = false, actions}: Props) {
                 ref={navRef}
             >
                 <div className="navbar_bar">
-                    <NavLink
+                    <a
                         className="navbar_logo"
-                        to="/"
+                        href="/"
                         aria-label={`${BRAND} — home`}
                     >
                         {BRAND}
-                    </NavLink>
+                    </a>
 
                     <div className="navbar_right">
                         <ul className="navbar_inline">
                             {inlineLinks.map((link) => (
                                 <li key={link.href}>
-                                    <NavLink
-                                        to={link.href}
-                                        className={({isActive}) =>
-                                            isActive ? "is-active" : undefined
-                                        }
-                                    >
-                                        {link.label}
-                                    </NavLink>
+                                    <a href={link.href}>{link.label}</a>
                                 </li>
                             ))}
                         </ul>
