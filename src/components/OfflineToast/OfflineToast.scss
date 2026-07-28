@@ -1,0 +1,75 @@
+// Custom properties this component expects the host app to define:
+//   --surface   background of the toast
+//   --border    its 1px outline
+//   --text      its text and icon colour
+// No fallbacks, matching the rest of the template: an undefined property makes
+// the declaration invalid at computed-value time rather than imposing a colour.
+//
+// Pinned to the bottom so it can never collide with the navbar.
+.offline-toast {
+    position: fixed;
+    bottom: 1.25rem;
+    left: 50%;
+    z-index: 2000;
+
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    padding: 0.5rem 0.85rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    color: var(--text);
+    font-size: 0.875rem;
+
+    // translateX centres it; the keyframes below repeat it, because a transform
+    // in an animation replaces this one rather than composing with it.
+    transform: translateX(-50%);
+    animation: offline-toast-in 0.3s ease-out;
+
+    // Purely informational, so it should never swallow a click meant for the page.
+    pointer-events: none;
+    user-select: none;
+
+    svg {
+        flex-shrink: 0;
+    }
+
+    @media (max-width: 480px) {
+        left: 1rem;
+        right: 1rem;
+        transform: none;
+        justify-content: center;
+        animation-name: offline-toast-in-wide;
+    }
+}
+
+@keyframes offline-toast-in {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(0.75rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+@keyframes offline-toast-in-wide {
+    from {
+        opacity: 0;
+        transform: translateY(0.75rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .offline-toast {
+        animation: none;
+    }
+}

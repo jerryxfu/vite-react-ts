@@ -6,14 +6,15 @@ import "./index.scss";
 import HomePage from "./pages/Home/Home.tsx";
 import NotFoundPage from "./pages/NotFound/NotFound.tsx";
 import ErrorBoundary from "./components/ErrorBoundary.tsx";
+import OfflineToast from "./components/OfflineToast/OfflineToast.tsx";
 import {ThemeProvider} from "./Context/ThemeContext.tsx";
 
 const LazyAboutPage = lazy(() => import("./pages/About/About.tsx"));
 
 // export const isDev = import.meta.env.DEV || import.meta.env.MODE === "development";
 
-// Client-side navigation preserves scroll position,
-// so a route change would otherwise land you partway down the new page
+// Client-side navigation preserves scroll position, so a route change would
+// otherwise land you partway down the new page.
 function ScrollToTop() {
     const [pathname] = useLocation();
 
@@ -32,6 +33,7 @@ createRoot(rootElement).render(
         <ErrorBoundary>
             <ThemeProvider>
                 <ScrollToTop />
+                <OfflineToast />
                 <Switch>
                     <Route path="/"><HomePage /></Route>
                     <Route path="/about">

@@ -8,6 +8,7 @@ An opinionated starter template for React projects with TypeScript, Vite, and Sa
 - **TypeScript** with strict mode
 - **Sass** (SCSS) with a minimal reset and CSS custom properties (light/dark via `prefers-color-scheme`)
 - **ESLint** flat config with `typescript-eslint`, `react-hooks`, and `react-refresh` plugins
+- **PWA** via `vite-plugin-pwa` (offline precache, silent updates, offline toast)
 - **pnpm** as the enforced package manager
 
 ## Project Structure
@@ -44,8 +45,10 @@ pnpm dev
 ## Customization
 
 - **Styles**: Edit `src/index.scss` to change the color palette, fonts, or add variables. Add individual component-level `.scss` files as you expand the site.
-- **Routing**: Add new pages in `src/pages/` and register routes in `main.tsx`. Use `lazy()` + `<Suspense>` for code-split routes.
-- **Context providers**: Wrap `<RouterProvider />` in `main.tsx` with any context providers you need (e.g. theme, auth).
+- **Routing**: Add new pages in `src/pages/` and register `<Route>`s inside the `<Switch>` in `main.tsx`. Use `lazy()` + `<Suspense>` for code-split routes.
+- **PWA**: Rename the app and repoint the icons under `manifest` in `vite.config.ts`, and replace the placeholder icons in `public/`. Images are cached on first
+  view rather than precached, so only code, styles and markup ship in the initial cache.
+- **Context providers**: Wrap `<Switch>` in `main.tsx` with any context providers you need (e.g. theme, auth).
 
 ## Spacing content below the navbar
 
@@ -70,6 +73,42 @@ The height matches the navbar's at-rest size: the `56px` bar plus its `1rem` top
 it's fixed the spacer only needs to clear the initial height.
 
 For hero pages (`<Navbar isHero={true} />`), you can skip the spacer so the transparent bar sits over the hero content.
+
+## Removing the PWA
+
+If you don't want offline support, the whole thing comes out in four steps:
+
+```bash
+pnpm remove vite-plugin-pwa
+rm -r src/components/OfflineToast
+```
+
+1. Delete the `VitePWA({ ... })` block and its `import` from `vite.config.ts`, leaving `plugins: [react()]`.
+2. Delete the `OfflineToast` import and `<OfflineToast />` from `src/main.tsx`.
+3. Drop the `dev-dist` entry from `.gitignore`.
+4. The plugin was generating `/manifest.webmanifest` and injecting the `<link rel="manifest">` into `index.html`. Without it there is no manifest at all — the
+   icons in `public/` are still served, but the app is no longer installable. If you want the icons without the offline behaviour, add a static
+   `public/site.webmanifest` and link it yourself.
+
+### If you have already deployed once
+
+Deleting the plugin does **not** remove the service worker from browsers that already have it. A registered worker keeps serving its cached `index.html` on
+every visit, and since your new build no longer ships a `sw.js` to replace it, those visitors can be pinned to the old version indefinitely. There is no way to
+reach them after the fact.
+
+So if the app has shipped with the PWA enabled, do this **first**, as its own release:
+
+```ts
+VitePWA({
+    selfDestroying: true,
+    // leave the rest of the config as-is
+})
+```
+
+That builds a service worker whose only job is to unregister itself and delete its caches. Deploy it, leave it up long enough for returning visitors to pick it
+up — a week is a reasonable default, longer if your traffic is sparse — and only then remove the plugin using the steps above.
+
+If the PWA has never been deployed anywhere, skip all of this and just delete it.
 
 ---
 
