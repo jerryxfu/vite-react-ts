@@ -23,14 +23,24 @@
     }
 }
 
+// Previously only hooked into @media (prefers-color-scheme: dark), but the theme system toggles [data-theme] on <html> instead,
+// so switching to dark on a light OS left these vars (and thus headings) stuck light, and vice versa. Same two-selector pattern as index.scss, so it follows the toggle.
+@mixin center-dark {
+    --text-h: #f3f4f6;
+    --code-bg: #1f2028;
+    --accent-bg: rgba(192, 132, 252, 0.15);
+    --accent-border: rgba(192, 132, 252, 0.5);
+    --social-bg: rgba(47, 48, 58, 0.5);
+    --shadow: rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+}
+
+:root[data-theme="dark"] #center {
+    @include center-dark;
+}
+
 @media (prefers-color-scheme: dark) {
-    #center {
-        --text-h: #f3f4f6;
-        --code-bg: #1f2028;
-        --accent-bg: rgba(192, 132, 252, 0.15);
-        --accent-border: rgba(192, 132, 252, 0.5);
-        --social-bg: rgba(47, 48, 58, 0.5);
-        --shadow: rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+    :root:not([data-theme]) #center {
+        @include center-dark;
     }
 }
 
@@ -39,7 +49,7 @@ code {
     font-size: 15px;
     line-height: 135%;
     padding: 4px 8px;
-    border-radius: 4px;
+    border-radius: var(--r-xs);
     background: var(--code-bg);
     color: var(--text-h);
 }
@@ -48,7 +58,7 @@ code {
     font-family: var(--mono), monospace;
     font-size: 16px;
     padding: 5px 10px;
-    border-radius: 5px;
+    border-radius: var(--r-xs);
     color: var(--accent);
     background: var(--accent-bg);
     border: 2px solid transparent;
@@ -152,7 +162,7 @@ code {
     a {
         color: var(--text-h);
         font-size: 16px;
-        border-radius: 6px;
+        border-radius: var(--r-sm);
         background: var(--social-bg);
         display: flex;
         padding: 6px 12px;

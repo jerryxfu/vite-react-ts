@@ -117,7 +117,7 @@
 .navbar_toggle {
     background: transparent;
     border: none;
-    border-radius: 6px;
+    border-radius: var(--r-sm);
     padding: 0.35rem 0.4rem;
     cursor: pointer;
     display: flex;
@@ -209,7 +209,7 @@
 .navdrawer_close {
     background: transparent;
     border: none;
-    border-radius: 6px;
+    border-radius: var(--r-sm);
     padding: 0.35rem;
     cursor: pointer;
     color: var(--text);
@@ -283,7 +283,7 @@
     }
 
     svg {
-        opacity: 0.5;
+        color: var(--text-4);
         flex-shrink: 0;
     }
 }
@@ -296,7 +296,7 @@
     background: transparent;
     border: none;
     cursor: pointer;
-    color: var(--text-secondary);
+    color: var(--text-3);
     font-size: 0.95rem;
     padding: 0.45rem 0;
     margin-bottom: 0.5rem;

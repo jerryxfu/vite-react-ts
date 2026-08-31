@@ -2,6 +2,7 @@
 //   --surface   background of the toast
 //   --border    its 1px outline
 //   --text      its text and icon colour
+//   --shadow    the colour of its drop shadow
 // No fallbacks, matching the rest of the template: an undefined property makes
 // the declaration invalid at computed-value time rather than imposing a colour.
 //
@@ -18,9 +19,10 @@
 
     padding: 0.5rem 0.85rem;
     border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: var(--r-md);
     background: var(--surface);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    // --shadow rather than a fixed black, so a light-mode shadow is not carried into dark.
+    box-shadow: 0 4px 20px var(--shadow);
     color: var(--text);
     font-size: 0.875rem;
 

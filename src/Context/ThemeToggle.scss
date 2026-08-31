@@ -3,7 +3,7 @@
 .theme-toggle {
     background: transparent;
     border: none;
-    border-radius: 6px;
+    border-radius: var(--r-sm);
     padding: 0.35rem 0.4rem;
     cursor: pointer;
     display: flex;
