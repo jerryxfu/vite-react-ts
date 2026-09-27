@@ -37,16 +37,19 @@ export default function Navbar({isHero = false, isShrunk = false, actions}: Prop
         const nav = navRef.current;
         if (!nav) return;
 
-        const setScrolled = (on: boolean) => nav.classList.toggle("is-scrolled", on);
+        // Compact or not depends only on the scroll position, re-read whenever the scroll crosses the trigger's start or end.
+        const update = () => nav.classList.toggle("is-scrolled", window.scrollY > SHRINK_AT);
 
-        // onToggle fires only when the active state flips, where onUpdate would run on every scroll frame to usually change nothing.
         ScrollTrigger.create({
             start: SHRINK_AT,
             end: () => Math.max(ScrollTrigger.maxScroll(window), SHRINK_AT + 1),
-            onToggle: (self) => setScrolled(self.isActive),
+            onEnter: update,
+            onLeave: update,
+            onEnterBack: update,
+            onLeaveBack: update,
         });
 
-        setScrolled(window.scrollY > SHRINK_AT);
+        update();
     });
 
     // Escape closes the drawer.

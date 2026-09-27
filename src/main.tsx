@@ -6,7 +6,6 @@ import "./index.scss";
 import HomePage from "./pages/Home/Home.tsx";
 import NotFoundPage from "./pages/NotFound/NotFound.tsx";
 import ErrorBoundary from "./components/ErrorBoundary.tsx";
-import OfflineToast from "./components/OfflineToast/OfflineToast.tsx";
 import {ThemeProvider} from "./Context/ThemeContext.tsx";
 
 // A deploy replaces every hashed filename, so a tab opened against an older build can ask for a chunk that no longer exists.
@@ -46,7 +45,6 @@ createRoot(rootElement).render(
         <ErrorBoundary>
             <ThemeProvider>
                 <ScrollToTop />
-                <OfflineToast />
                 <Switch>
                     <Route path="/"><HomePage /></Route>
                     <Route path="/about">
