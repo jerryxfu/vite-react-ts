@@ -5,7 +5,7 @@ An opinionated starter template for React projects with TypeScript, Vite, and Sa
 ## What's Included
 
 - **React** with `wouter` (lazy loading, error boundary)
-- **TypeScript** with strict mode
+- **TypeScript** with strict mode. `tsc` is TypeScript 7 (the `typescript-7` package); `typescript` is the TypeScript 6 package, because typescript-eslint doesn't support 7 yet.
 - **Sass** (SCSS) with a minimal reset and CSS custom properties (light/dark via `prefers-color-scheme`)
 - **ESLint** flat config with `typescript-eslint`, `react-hooks`, and `react-refresh` plugins
 - **pnpm** as the enforced package manager
